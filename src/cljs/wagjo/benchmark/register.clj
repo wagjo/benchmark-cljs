@@ -10,17 +10,20 @@
   "Defines and registers benchmark."
   [name & body]
   (let [name-str (str *ns* "/" name)
+        group (subs (str *ns*) 22)
+        fn-name (gensym)
         label (str "<a href=\"https://github.com/wagjo/"
                    "benchmark-cljs/blob/master/src/cljs/"
                    (cs/replace (cs/replace *ns* #"\." "/")
                                #"\-" "_") ".cljs\">"
                    (subs name-str 22) "</a>")]
     `(do
-       (defn ~name []
+       (defn ~fn-name []
          (wagjo.tools.profile/benchmark ~label ~@body))
        (swap! wagjo.benchmark.state/benchmarks-ref
               conj
-              {:name ~name-str :fn ~name}))))
+              {:path ~name-str :fn ~fn-name
+               :group ~group :name ~(str name)}))))
 
 (comment
 

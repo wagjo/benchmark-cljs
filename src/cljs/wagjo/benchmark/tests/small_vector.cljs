@@ -34,7 +34,7 @@
   []
   (cljs.core.PersistentVector/fromArray (array 1 2.0 "b") true))
 
-(defbenchmark create-benchmark
+(defbenchmark create
   300 10000
   []
   "array" (create-array)
@@ -82,7 +82,7 @@
   (let [[x y z] vec]
     [x y z]))
 
-(defbenchmark access-benchmark
+(defbenchmark access
   50 10000
   [arr (create-array)
    avec (create-array-vector)
@@ -114,7 +114,7 @@
   [vec]
   (conj vec -3))
 
-(defbenchmark conj-benchmark
+(defbenchmark conj
   100 10000
   [arr (create-array)
    avec (create-array-vector)
