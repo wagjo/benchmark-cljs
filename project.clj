@@ -3,6 +3,7 @@
   :url "https://github.com/wagjo/benchmark-cljs"
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/data.json "0.2.2"] ;; needed for piggieback
+                 [core.async "0.1.0-SNAPSHOT"]
                  [com.wagjo/clojurescript "0.1.0-SNAPSHOT"]
                  [com.wagjo/data-cljs "0.1.0-SNAPSHOT"]
                  [com.wagjo/core.rrb-vector "0.1.0-SNAPSHOT"]

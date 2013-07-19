@@ -2,9 +2,8 @@
 
 (ns wagjo.benchmark.core
   "Main entry point."
-  (:require-macros [wagjo.tools.log :as log]
-                   [wagjo.tools.profile :as prof])
-  (:require [wagjo.tools.profile :as prof]
+  (:require-macros [cljs.core.async.macros :refer [go]])
+  (:require [cljs.core.async :refer [>! <! close! chan timeout]]
             [cljs.core.rrb-vector :as rrb]
             [wagjo.benchmark.state :as state]
             [wagjo.benchmark.page :as wp]
@@ -23,9 +22,18 @@
 (defn ^{:export "benchmarkRun"} run!
   "Runs all available benchmarks."
   []
-  (let [benchmarks @state/benchmarks-ref
-        sorted (sort-by :name benchmarks)]
-    ;; TODO: non-blocking run
-    (doseq [b sorted]
-      (apply wp/dom-print-benchmark ((:fn b)))))
-  (wp/wait-over!))
+  (let [bench-chan (chan)]
+    (go
+     (let [benchmarks @state/benchmarks-ref
+           sorted (sort-by :name benchmarks)]
+       (doseq [b sorted]
+         (>! bench-chan b))
+       (close! bench-chan)))
+    (go
+     (<! (timeout 10)) ;; allow page to render
+     (loop [b (<! bench-chan)]
+       (if (nil? b)
+         (wp/wait-over!)
+         (do
+           (apply wp/dom-print-benchmark ((:fn b)))
+           (recur (<! bench-chan))))))))
