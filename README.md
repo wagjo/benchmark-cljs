@@ -5,7 +5,7 @@ see [http://wagjo.github.io/benchmark-cljs/](http://wagjo.github.io/benchmark-cl
 ## Overview
 
 JSPerf tests:
-* [http://jsperf.com/cljs-arrayvector](http://jsperf.com/cljs-arrayvector)
+* [http://jsperf.com/cljs-arrayvector/2](http://jsperf.com/cljs-arrayvector/2)
 
 ## Usage
 
