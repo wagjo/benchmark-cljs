@@ -25,3 +25,65 @@ h2 {
   margin-bottom:0em;
   padding-left:1em;
 }
+
+.bg {
+  font-weight: bold;
+}
+
+.mlg {
+  padding-top:1em;
+}
+
+.bb {
+  padding-left:0.5em;
+  font-size:small;
+  font-style:italic;
+}
+
+.bb:visited {
+  color:blue;
+}
+
+.bg:visited {
+  color:blue;
+}
+
+#menu {
+  dborder:1px solid black;
+  padding:1em;
+  padding-top:0em;
+
+  color:#D96459;
+  background-color:#F1CBB1;
+  -webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+
+}
+
+#content {
+  padding:1em;
+  padding-top:0em;
+}
+
+#container {
+    display: -webkit-flex;
+    display:         flex;
+    -webkit-flex-flow: row;
+    flex-flow: row;
+}
+
+#footer {
+    font-size:small;
+    color:#888;
+    font-style:italic;
+    text-align:right;
+    padding-top:1em;
+}
+
+.mlf {
+    font-size:x-small;
+    color:black;
+    text-align:left;
+    padding-top:1.5em;
+}

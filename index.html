@@ -6,12 +6,18 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body id="bdy" style="margin:2em;">
-    <h2>Benchmarking Clojurescript</h2>
-    <div id="content">
-      <p id="wait">Computing...</p>
+    <h2>Benchmarking ClojureScript</h2>
+    <div id="container">
+      <div id="menu"></div>
+      <div id="content">
+        <p>Ready for testing. Please select group or individual benchmark.</p>
+      </div>
     </div>
+    <div id="footer">Copyright © 2013, Jozef
+    Wagner. Licensed under EPL.<br/><a href="https://github.com/wagjo/benchmark-cljs">https://github.com/wagjo/benchmark-cljs</a></div>
+    <a href="https://github.com/wagjo/benchmark-cljs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
     <script src="benchmark.js"></script>
     <script>window.addEventListener("load", function()
-    {benchmarkWrap(); benchmarkRun();}, false);</script>
+    {benchmarkWrap();}, false);</script>
   </body>
 </html>
