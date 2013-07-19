@@ -1,0 +1,14 @@
+#!/bin/sh
+
+CLASSPATH=$(lein classpath)
+
+OUTPUT=gh-pages/benchmark.js
+
+BUILD="(use 'cljs.closure)(def opts {:output-to \"$OUTPUT\" :output-dir \"target/js-adv\" :optimizations :advanced :warnings true :externs [\"src/externs.js\"]})(build \"src/cljs\" opts)(.flush *out*)(shutdown-agents)(System/exit 0)"
+
+# compile
+java -server -cp "$CLASSPATH" clojure.main -e "$BUILD"
+
+# wrap js in function, so it does not pollute global scope
+sed -i '1 s/^/var benchmarkWrap=function(){/' $OUTPUT
+sed -i '$s/$/benchmarkInit();};/' $OUTPUT

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+CLASSPATH=$(lein classpath)
+
+java -server -cp "$CLASSPATH" clojure.main -e "(use 'cljs.closure)(def opts {:output-to \"gh-pages/benchmark-dev.js\" :output-dir \"target/js\" :warnings true})(build \"src/cljs\" opts)"
