@@ -12,7 +12,8 @@
   (let [name-str (str *ns* "/" name)
         label (str "<a href=\"https://github.com/wagjo/"
                    "benchmark-cljs/blob/master/src/cljs/"
-                   (cs/replace *ns* #"\." "/") ".cljs\">"
+                   (cs/replace (cs/replace *ns* #"\." "/")
+                               #"\-" "_") ".cljs\">"
                    (subs name-str 22) "</a>")]
     `(do
        (defn ~name []
