@@ -16,6 +16,11 @@
 (defn ^{:export "benchmarkInit"} init!
   "Initializes benchmarking.
   Is called after page loading is complete."
+  [])
+
+(defn ^{:export "benchmarkInitPage"} init-page!
+  "Initializes benchmarking.
+  Is called after page loading is complete."
   []
   (wp/populate-menu @state/benchmarks-ref))
 
