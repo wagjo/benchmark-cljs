@@ -1,0 +1,27 @@
+@import url(http://fonts.googleapis.com/css?family=Sofia|Ubuntu:400,700&subset=latin,latin-ext);
+
+body {
+  font-family: 'Ubuntu', sans-serif;
+  background-color:#F1E9D5;
+  color:#403D2F;
+}
+
+h1, h2 {
+  color:#4A8C7A;
+}
+
+h2 {
+  font-family: 'Sofia', cursive;
+}
+
+.bt {
+  font-weight: bold;
+  margin-bottom:0em;
+}
+
+.br {
+  font-size: small;
+  margin-top:0em;
+  margin-bottom:0em;
+  padding-left:1em;
+}
