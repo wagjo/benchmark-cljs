@@ -1,17 +1,22 @@
 ;; Copyright (C) 2013, Jozef Wagner. All rights reserved.
 
 (ns wagjo.benchmark.register
-  "Benchmark registrar.")
+  "Benchmark registrar."
+  (:require [clojure.string :as cs]))
 
 ;;;; Public API
 
 (defmacro defbenchmark
   "Defines and registers benchmark."
   [name & body]
-  (let [name-str (str *ns* "/" name)]
+  (let [name-str (str *ns* "/" name)
+        label (str "<a href=\"https://github.com/wagjo/"
+                   "benchmark-cljs/blob/master/src/cljs/"
+                   (cs/replace *ns* #"\." "/") ".cljs\">"
+                   (subs name-str 22) "</a>")]
     `(do
        (defn ~name []
-         (wagjo.tools.profile/benchmark ~(subs name-str 22) ~@body))
+         (wagjo.tools.profile/benchmark ~label ~@body))
        (swap! wagjo.benchmark.state/benchmarks-ref
               conj
               {:name ~name-str :fn ~name}))))

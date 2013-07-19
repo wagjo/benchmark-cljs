@@ -31,6 +31,14 @@
     (.appendChild dom-elm dom-nde)
     dom-elm))
 
+(defn dom-element-w-class-html
+  "Creates DOM element with given tag, class and text."
+  [dom-doc tag class html]
+  (let [dom-elm (.createElement dom-doc tag)]
+    (gcs/add dom-elm class)
+    (set! (.-innerHTML dom-elm) html)
+    dom-elm))
+
 (defn dom-conj!
   "Appends child-elm to dom-elm. Returns nil."
   [dom-elm child-elm]
@@ -51,10 +59,10 @@
   [title & reports]
   (let [content-elm (find-by-id dom-doc "content")]
     (dom-conj! content-elm
-               (dom-element-w-class-text dom-doc "p" "bt" title))
+               (dom-element-w-class-html dom-doc "p" "bt" title))
     (doseq [r reports]
       (dom-conj! content-elm
-                 (dom-element-w-class-text dom-doc "p" "br" r)))))
+                 (dom-element-w-class-html dom-doc "p" "br" r)))))
 
 (defn wait-over!
   "Removes wait message."
