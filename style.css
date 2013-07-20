@@ -87,3 +87,8 @@ border-radius: 5px;
     text-align:left;
     padding-top:1.5em;
 }
+
+.noshow {
+    color:#4A8C7A;
+    text-decoration:none;
+}
