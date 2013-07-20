@@ -103,7 +103,7 @@
   (let [c (chan)]
     (run-tests c)
     (go
-     (let [sorted (sort-by :name group)]
+     (let [sorted group]
        (doseq [b sorted]
          (>! c b))
        (close! c)))))
@@ -144,7 +144,7 @@
       (let [new-line-elm (dom-element-w-class dom-doc "div" "mlg")]
         (dom-conj! menu-elm new-line-elm)
         (dom-conj! new-line-elm (create-menu-group group)))
-      (doseq [b (sort-by :name group)]
+      (doseq [b group]
         (let [new-line-elm (dom-element-w-class dom-doc "div" "ml")]
           (dom-conj! menu-elm new-line-elm)
           (dom-conj! new-line-elm (create-menu-bench b)))))
