@@ -37,7 +37,7 @@
 (defbenchmark create
   300 10000
   []
-  "array" (create-array)
+  "array ↑" (create-array)
   "array vector" (create-array-vector)
   "persistent vector" (create-persistent-vector))
 
@@ -87,11 +87,11 @@
   [arr (create-array)
    avec (create-array-vector)
    pvec (create-persistent-vector)]
-  "array" (access-array arr)
+  "array ↑" (access-array arr)
   "array vector" (access-array-vector avec)
-  "persistent vector" (access-persistent-vector pvec)
-  "destructure array vector" (destructure-array-vector avec)
-  "destructure persistent vector"
+  "persistent vector ↓↓" (access-persistent-vector pvec)
+  "destructure array vector ↑" (destructure-array-vector avec)
+  "destructure persistent vector ↓↓"
   (destructure-persistent-vector pvec))
 
 ;;; conjoining
@@ -119,6 +119,6 @@
   [arr (create-array)
    avec (create-array-vector)
    pvec (create-persistent-vector)]
-  "array" (conj-array arr)
+  "array ↑" (conj-array arr)
   "array vector" (conj-array-vector avec)
   "persistent vector" (conj-persistent-vector pvec))

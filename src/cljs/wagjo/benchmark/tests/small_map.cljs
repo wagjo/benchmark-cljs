@@ -30,7 +30,7 @@
 (defbenchmark create
   50 10000 []
   "map" (create-map)
-  "custom type" (create-type))
+  "custom type ↑" (create-type))
 
 ;;; access
 
@@ -70,10 +70,10 @@
   50 10000
   [m (create-map)
    t (create-type)]
-  "map with get" (access-map-get m)
-  "map with keyword" (access-map-keyword m)
-  "map with map" (access-map-map m)
-  "type" (access-type t))
+  "(get m :a)" (access-map-get m)
+  "(:a m)" (access-map-keyword m)
+  "(m :a)" (access-map-map m)
+  "(.-a m) ↑" (access-type t))
 
 ;;; assoc
 
@@ -92,4 +92,4 @@
   [m (create-map)
    t (create-type)]
   "map" (assoc-map m)
-  "type" (assoc-type t))
+  "type ↑" (assoc-type t))
