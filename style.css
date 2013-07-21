@@ -26,6 +26,14 @@ h2 {
   padding-left:1em;
 }
 
+.bn {
+  font-size: small;
+  margin-top:0em;
+  margin-bottom:0em;
+  padding-left:1em;
+  font-style:italic;
+}
+
 .bg {
   font-weight: bold;
 }
