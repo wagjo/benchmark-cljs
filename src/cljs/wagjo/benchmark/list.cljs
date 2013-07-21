@@ -6,6 +6,7 @@
   (:require [wagjo.benchmark.tests.small-vector]
             [wagjo.benchmark.tests.small-map]
             [wagjo.benchmark.tests.function]
-            [wagjo.benchmark.tests.polymorphism]))
+            [wagjo.benchmark.tests.polymorphism]
+            [wagjo.benchmark.tests.equivalence]))
 
 ;; Do not delete this file

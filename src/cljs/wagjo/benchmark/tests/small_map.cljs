@@ -17,7 +17,9 @@
    :e :five})
 
 (deftype MyType [a b c d e])
+(defrecord MyRecord [a b c d e])
 (defn- create-my-type [a b c d e] (MyType. a b c d e))
+(defn- create-my-record [a b c d e] (MyRecord. a b c d e))
 (defn- get-a [o] (.-a o))
 (defn- get-b [o] (.-b o))
 (defn- get-c [o] (.-c o))
@@ -27,11 +29,15 @@
 (defn- create-type []
   (create-my-type 1 2.0 "3" -4 :five))
 
+(defn- create-record []
+  (create-my-record 1 2.0 "3" -4 :five))
+
 (defbenchmark create
   50 10000 []
   "map" (create-map)
   "custom type" (create-type)
-  "Creating type instance is faster.")
+  "custom record" (create-record)
+  "Creating type/record instance is faster.")
 
 ;;; access
 
@@ -70,12 +76,16 @@
 (defbenchmark access
   50 10000
   [m (create-map)
-   t (create-type)]
+   t (create-type)
+   r (create-record)]
   "(get m :a)" (access-map-get m)
   "(:a m)" (access-map-keyword m)
   "(m :a)" (access-map-map m)
   "(.-a m)" (access-type t)
-  "Accessing type field is fastest. Accessing by keyword first is slowest.")
+  "(get r :a)" (access-map-get r)
+  "(:a r)" (access-map-keyword r)
+  "(.-a r)" (access-type r)
+  "Accessing type/record field directly is fastest. Accessing by keyword first is slowest.")
 
 ;;; assoc
 
@@ -89,10 +99,20 @@
         e (get-e o)]
     (create-my-type a b 8 d e)))
 
+(defn- assoc-record [o]
+  (let [a (get-a o)
+        b (get-b o)
+        d (get-d o)
+        e (get-e o)]
+    (create-my-record a b 8 d e)))
+
 (defbenchmark assoc
   50 10000
   [m (create-map)
-   t (create-type)]
-  "map" (assoc-map m)
-  "type" (assoc-type t)
-  "Assoc by creating new type instance is faster.")
+   t (create-type)
+   r (create-record)]
+  "map assoc" (assoc-map m)
+  "type clone" (assoc-type t)
+  "record assoc" (assoc-map r)
+  "record clone" (assoc-record r)
+  "Assoc by cloning is faster.")

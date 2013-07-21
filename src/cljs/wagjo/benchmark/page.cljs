@@ -73,7 +73,7 @@
       (dom-conj! content-elm
                  (dom-element-w-class-html dom-doc "p" "br" r)))
     (dom-conj! content-elm
-               (dom-element-w-class-html dom-doc "p" "bn" (str "Expected outcomes: " notes)))))
+               (dom-element-w-class-html dom-doc "p" "bn" (str "Expected outcome: " notes)))))
 
 (defn wait-over!
   "Removes wait message."
