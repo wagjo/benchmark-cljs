@@ -5,79 +5,83 @@
   (:require-macros [wagjo.tools.profile]
                    [wagjo.benchmark.register :refer [defbenchmark]])
   (:require [wagjo.tools.profile]
-            [wagjo.benchmark.state]))
+            [wagjo.benchmark.state]
+            [wagjo.benchmark.preventer :refer [crunch]]))
 
 ;;; creation
 
-(defn- create-map []
+(defn- ^:export create-map []
   {:a 1
    :b 2.0
    :c "3"
-   :d -4
+   :d (rand-int 10)
    :e :five})
 
 (deftype MyType [a b c d e])
 (defrecord MyRecord [a b c d e])
-(defn- create-my-type [a b c d e] (MyType. a b c d e))
-(defn- create-my-record [a b c d e] (MyRecord. a b c d e))
-(defn- get-a [o] (.-a o))
-(defn- get-b [o] (.-b o))
-(defn- get-c [o] (.-c o))
-(defn- get-d [o] (.-d o))
-(defn- get-e [o] (.-e o))
+(defn- ^:export create-my-type [a b c d e] (MyType. a b c d e))
+(defn- ^:export create-my-record [a b c d e] (MyRecord. a b c d e))
+(defn- ^:export get-a [o] (.-a o))
+(defn- ^:export get-b [o] (.-b o))
+(defn- ^:export get-c [o] (.-c o))
+(defn- ^:export get-d [o] (.-d o))
+(defn- ^:export get-e [o] (.-e o))
 
-(defn- create-type []
-  (create-my-type 1 2.0 "3" -4 :five))
+(defn- ^:export create-type []
+  (create-my-type 1 2.0 "3" (rand-int 10) :five))
 
-(defn- create-record []
-  (create-my-record 1 2.0 "3" -4 :five))
+(defn- ^:export create-record []
+  (create-my-record 1 2.0 "3" (rand-int 10) :five))
 
 (defbenchmark create
   50 10000 []
-  "map" (create-map)
-  "custom type" (create-type)
-  "custom record" (create-record)
+  "baseline" (do (crunch nil) (crunch (rand-int 10)))
+  "map" (do (crunch nil) (crunch (create-map)))
+  "custom type" (do (crunch nil) (crunch (create-type)))
+  "custom record" (do (crunch nil) (crunch (create-record)))
   "Creating type/record instance is faster.")
 
 ;;; access
 
-(defn- access-map-get [m]
+(defn- ^:export access-map-get [m]
   (let [a (get m :a)
         b (get m :b)
         c (get m :c)
         d (get m :d)
         e (get m :e)]
-    [a b c d e]))
+    (crunch nil) (crunch [a b c d e])))
 
-(defn- access-map-keyword [m]
+(defn- ^:export access-map-keyword [m]
   (let [a (:a m)
         b (:b m)
         c (:c m)
         d (:d m)
         e (:e m)]
-    [a b c d e]))
+    (crunch nil) (crunch [a b c d e])))
 
-(defn- access-map-map [m]
+(defn- ^:export access-map-map [m]
   (let [a (m :a)
         b (m :b)
         c (m :c)
         d (m :d)
         e (m :e)]
-    [a b c d e]))
+    (crunch nil) (crunch [a b c d e])))
 
-(defn- access-type [o]
+(defn- ^:export access-type [o]
   (let [a (get-a o)
         b (get-b o)
         c (get-c o)
         d (get-d o)
         e (get-e o)]
-    [a b c d e]))
+    (crunch nil) (crunch [a b c d e])))
 
 (defbenchmark access
   50 10000
   [m (create-map)
    t (create-type)
-   r (create-record)]
+   r (create-record)
+   a (rand-int 10)]
+  "baseline" (do (crunch nil) (crunch [a 2 3 4 5]))
   "(get m :a)" (access-map-get m)
   "(:a m)" (access-map-keyword m)
   "(m :a)" (access-map-map m)
@@ -89,28 +93,31 @@
 
 ;;; assoc
 
-(defn- assoc-map [m]
-  (assoc m :c 8))
+(defn- ^:export assoc-map [m]
+  (crunch nil) (crunch (assoc m :c 8)))
 
-(defn- assoc-type [o]
+(defn- ^:export assoc-type [o]
   (let [a (get-a o)
         b (get-b o)
         d (get-d o)
         e (get-e o)]
-    (create-my-type a b 8 d e)))
+    (crunch nil)
+    (crunch (create-my-type a b 8 d e))))
 
-(defn- assoc-record [o]
+(defn- ^:export assoc-record [o]
   (let [a (get-a o)
         b (get-b o)
         d (get-d o)
         e (get-e o)]
-    (create-my-record a b 8 d e)))
+    (crunch nil)
+    (crunch (create-my-record a b 8 d e))))
 
 (defbenchmark assoc
   50 10000
   [m (create-map)
    t (create-type)
    r (create-record)]
+  "baseline" (do (crunch nil) (crunch nil))
   "map assoc" (assoc-map m)
   "type clone" (assoc-type t)
   "record assoc" (assoc-map r)

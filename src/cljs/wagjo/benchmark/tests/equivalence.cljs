@@ -21,18 +21,17 @@
 (defn- create-record []
   (create-my-record 1 2.0 "3" -4 :five))
 
-(defn ^{:export "small_vectorCreateArray"} create-array
+(defn create-array
   "Returns new array."
   []
   (array 1 2.0 "3" -4 :five))
 
-(defn ^{:export "small_vectorCreateArrayVector"} create-array-vector
+(defn create-array-vector
   "Returns new array vector."
   []
   (ArrayVector. nil (array 1 2.0 "3" -4 :five) nil))
 
-(defn ^{:export "small_vectorCreatePersistentVector"}
-  create-persistent-vector
+(defn create-persistent-vector
   "Returns new persistent vector."
   []
   (cljs.core.PersistentVector/fromArray (array 1 2.0 "3" -4 :five)
@@ -52,8 +51,8 @@
           :e :five))
 
 (defbenchmark number
-  50 10000 [n 10
-           n2 10
+  50 10000 [n (rand-int 10)
+           n2 (rand-int 10)
            st "foo bar"
            st2 "foo bar"]
   "(== num num)" (== n n2)

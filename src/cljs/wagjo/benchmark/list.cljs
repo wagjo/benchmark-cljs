@@ -7,6 +7,7 @@
             [wagjo.benchmark.tests.small-map]
             [wagjo.benchmark.tests.function]
             [wagjo.benchmark.tests.polymorphism]
-            [wagjo.benchmark.tests.equivalence]))
+            [wagjo.benchmark.tests.equivalence]
+            [wagjo.benchmark.tests.collection]))
 
 ;; Do not delete this file

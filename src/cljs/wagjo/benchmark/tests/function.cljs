@@ -5,152 +5,163 @@
   (:require-macros [wagjo.tools.profile]
                    [wagjo.benchmark.register :refer [defbenchmark]])
   (:require [wagjo.tools.profile]
-            [wagjo.benchmark.state]))
-
-;;; arguments
-
-(def a 1)
-(def b 2)
-(def c 3)
-(def d 4)
-(def e 5)
-(def f 6)
-(def g 7)
-(def h 8)
-(def i 9)
-(def j 10)
-
-(defn- arg-0 []
-  [a b c d e f g h i j])
-(defn- arg-1 [la]
-  [la b c d e f g h i j])
-(defn- arg-2 [la lb]
-  [la lb c d e f g h i j])
-(defn- arg-3 [la lb lc]
-  [la lb lc d e f g h i j])
-(defn- arg-4 [la lb lc ld]
-  [la lb lc ld e f g h i j])
-(defn- arg-5 [la lb lc ld le]
-  [la lb lc ld le f g h i j])
-(defn- arg-6 [la lb lc ld le lf]
-  [la lb lc ld le lf g h i j])
-(defn- arg-7 [la lb lc ld le lf lg]
-  [la lb lc ld le lf lg h i j])
-(defn- arg-8 [la lb lc ld le lf lg lh]
-  [la lb lc ld le lf lg lh i j])
-(defn- arg-9 [la lb lc ld le lf lg lh li]
-  [la lb lc ld le lf lg lh li j])
-(defn- arg-10 [la lb lc ld le lf lg lh li lj]
-  [la lb lc ld le lf lg lh li lj])
-
-(defbenchmark arguments
-  50 10000 [la 1
-            lb 2
-            lc 3
-            ld 4
-            le 5
-            lf 6
-            lg 7
-            lh 8
-            li 9
-            lj 10]
-  "direct computation" [la lb lc ld le lf lg lh li lj]
-  "no arguments" (arg-0)
-  "1 argument" (arg-1 la)
-  "2 arguments" (arg-2 la lb)
-  "9 arguments" (arg-9 la lb lc ld le lf lg lh li)
-  "10 arguments" (arg-10 la lb lc ld le lf lg lh li lj)
-  "Number of arguments makes no difference.")
+            [wagjo.benchmark.state]
+            [wagjo.benchmark.preventer :refer [crunch]]))
 
 ;;; variadic
 
-(defn- arg-var [& l]
-  (let [[la lb lc] l]
-    [la lb lc d e f g h i j]))
-(defn- arity-var
-  ([] [a b c d e f g h i j])
-  ([& l]
-     (let [[la lb lc] l]
-       [la lb lc d e f g h i j])))
-(defn- arg-var-empty
-  ([& l]
-     [a b c d e f g h i j]))
+(defn- ^:export arg-fixed [a b c] (crunch nil) (crunch nil))
+(defn- ^:export arg-var [& xs] (crunch nil) (crunch nil))
+(defn- ^:export arg-var-other ([& xs] (crunch nil) (crunch nil)))
+(defn- ^:export arg-var-arity
+  ([] (crunch nil) (crunch nil))
+  ([& xs] (crunch nil) (crunch nil)))
 
 (defbenchmark variadic
-  50 10000 [la 1
-            lb 2
-            lc 3
-            ld 4
-            le 5
-            lf 6
-            lg 7
-            lh 8
-            li 9
-            lj 10]
-  "direct computation" [la lb lc ld le lf lg lh li lj]
-  "fixed arguments" (arg-3 la lb lc)
-  "variadic argument" (arg-var la lb lc)
-  "variadic in multi arity" (arity-var la lb lc)
-  "variadic argument without any argument processing" (arg-var-empty la lb lc)
+  50 10000 []
+  "baseline" (do (crunch nil) (crunch nil))
+  "fixed arguments" (arg-fixed nil nil nil)
+  "variadic argument" (arg-var nil nil nil)
+  "variadic argument other notation" (arg-var-other nil nil nil)
+  "variadic in multi arity" (arg-var-arity nil nil nil)
   "Variadics are slower.")
 
 ;;; arities
 
-(defn- arity-1
-  ([la] [la b c d e f g h i j]))
+(defn- ^:export arity-1 ([x] (crunch nil) (crunch nil)))
 
-(defn- arity-2
-  ([] [a b c d e f g h i j])
-  ([la] [la b c d e f g h i j]))
+(defn- ^:export arity-2
+  ([]
+     (crunch nil) (crunch nil))
+  ([x]
+     (crunch nil) (crunch nil)))
 
-(defn- arity-5
-  ([] [a b c d e f g h i j])
-  ([la] [la b c d e f g h i j])
-  ([la lb] [la lb c d e f g h i j])
-  ([la lb lc] [la lb lc d e f g h i j])
-  ([la lb lc ld] [la lb lc ld e f g h i j]))
-
-(defn- arity-10
-  ([] [a b c d e f g h i j])
-  ([la] [la b c d e f g h i j])
-  ([la lb] [la lb c d e f g h i j])
-  ([la lb lc] [la lb lc d e f g h i j])
-  ([la lb lc ld] [la lb lc ld e f g h i j])
-  ([la lb lc ld le] [la lb lc ld le f g h i j])
-  ([la lb lc ld le lf] [la lb lc ld le lf g h i j])
-  ([la lb lc ld le lf lg] [la lb lc ld le lf lg h i j])
-  ([la lb lc ld le lf lg lh] [la lb lc ld le lf lg lh i j])
-  ([la lb lc ld le lf lg lh li] [la lb lc ld le lf lg lh li j]))
+(defn- ^:export arity-5
+  ([]
+     (crunch nil) (crunch nil))
+  ([x]
+     (crunch nil) (crunch nil))
+  ([x y]
+     (crunch nil) (crunch nil))
+  ([x y z]
+     (crunch nil) (crunch nil))
+  ([x y z a]
+     (crunch nil) (crunch nil)))
 
 (defbenchmark arities
-  50 10000 [la 1]
-  "normal function" (arg-1 la)
-  "normal function with multi arity syntax" (arity-1 la)
-  "2 different arities" (arity-2 la)
-  "5 different arities" (arity-5 la)
-  "10 different arities" (arity-10 la)
-  "Multi arity function are slower, with similar overhead no matter how many different arity types they have.")
+  50 10000 []
+  "baseline" (do (crunch nil) (crunch nil))
+  "no multiple arities" (arity-1 nil)
+  "2 different arities" (arity-2 nil)
+  "5 different arities" (arity-5 nil)
+  "Slight overhead in Chrome, no difference in Firefox.")
 
 ;;; partials
 
-(defn- partial-apply
-  [lb]
-  (let [f (partial arg-2 a)]
-    (f lb)))
+(defn- ^:export pfn
+  [a b]
+  (crunch a) (crunch b))
 
-(defn- fn-apply
-  [lb]
-  (let [f (fn [lb] (arg-2 a lb))]
-    (f lb)))
+(def ^:export partial-apply
+  (partial pfn nil))
 
-(defn- reader-fn-apply
-  [lb]
-  (let [f #(arg-2 a %)]
-    (f lb)))
+(def ^:export fn-apply
+  (fn [x] (pfn nil x)))
+
+(def ^:export f2-apply
+  #(pfn nil %))
 
 (defbenchmark partials
-  50 10000 [lb 2]
-  "(partial f x)" (partial-apply lb)
-  "(fn [y] (f x y))" (fn-apply lb)
-  "#(f x %)" (reader-fn-apply lb)
-  "Partial is freakingly slow.")
+  50 10000 []
+  "baseline" (do (crunch nil) (crunch nil))
+  "(partial f x) created outside the loop" (partial-apply nil)
+  "(partial f x) created inside the loop"
+  (let [pf (partial pfn nil)] (pf nil))
+  "#(f x %) created outside the loop" (f2-apply nil)
+  "#(f x %) created inside the loop" (let [f1 #(pfn nil %)] (f1 nil))
+  "(fn [y] (f x y)) created outside the loop" (fn-apply nil)
+  "Partial is very slow. Also do note that creating anonymous function costs something. This was not much an issue in the Clojure. Try not to create anonymous function inside performance sensitive loops, as it is created in each iteration.")
+
+;;; passing a value
+
+(defn- ^:export passme-classic
+  [a b c d e]
+  (crunch nil) (crunch (+ a b c d e)))
+
+(defn- ^:export passme-array
+  [arr]
+  (let [a (aget arr 0)
+        b (aget arr 1)
+        c (aget arr 2)
+        d (aget arr 3)
+        e (aget arr 4)]
+    (crunch nil) (crunch (+ a b c d e))))
+
+(defn- ^:export passme-pvec
+  [pvec]
+  (let [[a b c d e] pvec]
+    (crunch nil) (crunch (+ a b c d e))))
+
+(defn- ^:export passme-avec
+  [avec]
+  (let [[a b c d e] ^ArrayVector avec]
+    (crunch nil) (crunch (+ a b c d e))))
+
+(defn- ^:export passme-var
+  [& xs]
+  (let [[a b c d e] xs]
+    (crunch nil) (crunch (+ a b c d e))))
+
+(defn- ^:export passme-map
+  [map]
+  (let [{:keys [a b c d e]} map]
+    (crunch nil) (crunch (+ a b c d e))))
+
+(defn- ^:export passme-map-wod
+  [map]
+  (let [a (get map :a)
+        b (get map :b)
+        c (get map :c)
+        d (get map :d)
+        e (get map :e)]
+    (crunch nil) (crunch (+ a b c d e))))
+
+(defn- ^:export passme-type
+  [t]
+  (let [a (.-a t)
+        b (.-b t)
+        c (.-c t)
+        d (.-d t)
+        e (.-e t)]
+    (crunch nil) (crunch (+ a b c d e))))
+
+(deftype Passer [a b c d e])
+
+(defbenchmark passing-values
+  50 10000
+  [a (rand-int 10)
+   b (rand-int 10)
+   c (rand-int 10)
+   d (rand-int 10)
+   e (rand-int 10)
+   arr (array a b c d e)
+   pvec (cljs.core.PersistentVector/fromArray arr true)
+   iseq (doall (seq pvec))
+   avec (ArrayVector. nil arr nil)
+   map {:a a :b b :c c :d d :e e}
+   ct (Passer. a b c d e)]
+  "baseline" (do (crunch nil) (crunch (+ a b c d e)))
+  "input in arguments" (passme-classic a b c d e)
+  "input in array" (passme-array arr)
+  "input in seq" (passme-pvec iseq)
+  "input in ordinary vector" (passme-pvec pvec)
+  "input in array vector" (passme-avec avec)
+  "input to variadic function" (passme-var a b c d e)
+  "input to variadic function through apply seq"
+  (apply passme-var iseq)
+  "input to variadic function through apply vec"
+  (apply passme-var pvec)
+  "input in ordinary map without destructuring" (passme-map-wod map)
+  "input in ordinary map" (passme-map map)
+  "pass custom type" (passme-type ct)
+  "Ordinary collections performs badly. This adds up if you often pass multiple values to/from function in the loop.")

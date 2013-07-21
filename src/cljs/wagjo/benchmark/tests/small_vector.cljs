@@ -6,7 +6,7 @@
                    [wagjo.benchmark.register :refer [defbenchmark]])
   (:require [wagjo.tools.profile]
             [wagjo.benchmark.state]
-            [cljs.core.rrb-vector :as rrb]))
+            [wagjo.benchmark.preventer :refer [crunch]]))
 
 ;;;; Public API
 
@@ -37,10 +37,12 @@
 (defbenchmark create
   300 10000
   []
-  "array" (create-array)
-  "array vector" (create-array-vector)
-  "persistent vector" (create-persistent-vector)
-  "Creating persistent vector instance is slowest (freakingly slow in Firefox).")
+  "baseline" (do (crunch nil) (crunch nil))
+  "array" (do (crunch nil) (crunch (create-array)))
+  "array vector" (do (crunch nil) (crunch (create-array-vector)))
+  "persistent vector" (do (crunch nil)
+                          (crunch (create-persistent-vector)))
+  "Creating persistent vector instance is slowest.")
 
 ;;; vector access
 
@@ -50,7 +52,7 @@
   (let [x (aget arr 0)
         y (aget arr 1)
         z (aget arr 2)]
-    [x y z]))
+    (crunch x) (crunch y) (crunch z)))
 
 (defn ^{:export "small_vectorAccessArrayVector"} access-array-vector
   "Accesses first three elements."
@@ -58,7 +60,7 @@
   (let [x (nth avec 0)
         y (nth avec 1)
         z (nth avec 2)]
-    [x y z]))
+    (crunch x) (crunch y) (crunch z)))
 
 (defn ^{:export "small_vectorAccessPersistentVector"}
   access-persistent-vector
@@ -67,27 +69,28 @@
   (let [x (nth vec 0)
         y (nth vec 1)
         z (nth vec 2)]
-    [x y z]))
+    (crunch x) (crunch y) (crunch z)))
 
 (defn ^{:export "small_vectorDestructureArrayVector"}
   destructure-array-vector
   "Accesses first three elements by destructuring."
   [avec]
   (let [[x y z] ^ArrayVector avec]
-    [x y z]))
+    (crunch x) (crunch y) (crunch z)))
 
 (defn ^{:export "small_vectorDestructurePersistentVector"}
   destructure-persistent-vector
   "Accesses first three elements by destructuring."
   [vec]
   (let [[x y z] vec]
-    [x y z]))
+    (crunch x) (crunch y) (crunch z)))
 
 (defbenchmark access
   50 10000
   [arr (create-array)
    avec (create-array-vector)
    pvec (create-persistent-vector)]
+  "baseline" (do (crunch nil) (crunch nil) (crunch nil))
   "array" (access-array arr)
   "array vector" (access-array-vector avec)
   "persistent vector" (access-persistent-vector pvec)
@@ -101,26 +104,28 @@
 (defn ^{:export "small_vectorConjArray"} conj-array
   "Conjoins to array."
   [arr]
+  (crunch nil)
   (let [new-arr (.slice arr)]
     (.push new-arr -3)
-    new-arr))
+    (crunch new-arr)))
 
 (defn ^{:export "small_vectorConjArrayVector"} conj-array-vector
   "Conjoins to ArrayVector."
   [avec]
-  (conj avec -3))
+  (crunch nil) (crunch (conj avec -3)))
 
 (defn ^{:export "small_vectorConjPersistentVector"}
   conj-persistent-vector
   "Conjoins to PersistentVector."
   [vec]
-  (conj vec -3))
+  (crunch nil) (crunch (conj vec -3)))
 
 (defbenchmark conj
   100 10000
   [arr (create-array)
    avec (create-array-vector)
    pvec (create-persistent-vector)]
+  "baseline" (do (crunch nil) (crunch nil))
   "array" (conj-array arr)
   "array vector" (conj-array-vector avec)
   "persistent vector" (conj-persistent-vector pvec)
