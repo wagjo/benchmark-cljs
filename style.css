@@ -4,6 +4,7 @@ body {
   font-family: 'Ubuntu', sans-serif;
   background-color:#F1E9D5;
   color:#403D2F;
+  margin-top:0.5em !important;
 }
 
 h1, h2 {
@@ -11,7 +12,9 @@ h1, h2 {
 }
 
 h2 {
+  margin-top:0px !important;
   font-family: 'Sofia', cursive;
+  margin-bottom:0em;
 }
 
 .bt {
@@ -66,6 +69,7 @@ h2 {
   -webkit-border-radius: 5px;
 -moz-border-radius: 5px;
 border-radius: 5px;
+  min-width:120px;
 
 }
 
@@ -99,4 +103,21 @@ border-radius: 5px;
 .noshow {
     color:#4A8C7A;
     text-decoration:none;
+}
+
+#wait {
+  font-weight: bold;
+  color:red;   
+}
+
+#subtitle {
+    font-size:small;
+    color:#888;
+    font-style:italic;
+    text-align:left;
+    padding-top:0em;
+    padding-left:0.5em;
+    margin-top:0em;
+    padding-bottom:0.5em;
+  font-family: 'Sofia', cursive;
 }
