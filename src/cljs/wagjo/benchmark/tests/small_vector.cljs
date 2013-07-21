@@ -40,7 +40,7 @@
   "array" (create-array)
   "array vector" (create-array-vector)
   "persistent vector" (create-persistent-vector)
-  "Creating persistent vector instance is slowest (freakingly slow in firefox).")
+  "Creating persistent vector instance is slowest (freakingly slow in Firefox).")
 
 ;;; vector access
 

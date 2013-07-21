@@ -62,6 +62,38 @@
   "10 arguments" (arg-10 la lb lc ld le lf lg lh li lj)
   "Number of arguments makes no difference.")
 
+;;; variadic
+
+(defn- arg-var [& l]
+  (let [[la lb lc] l]
+    [la lb lc d e f g h i j]))
+(defn- arity-var
+  ([] [a b c d e f g h i j])
+  ([& l]
+     (let [[la lb lc] l]
+       [la lb lc d e f g h i j])))
+(defn- arg-var-empty
+  ([& l]
+     [a b c d e f g h i j]))
+
+(defbenchmark variadic
+  50 10000 [la 1
+            lb 2
+            lc 3
+            ld 4
+            le 5
+            lf 6
+            lg 7
+            lh 8
+            li 9
+            lj 10]
+  "direct computation" [la lb lc ld le lf lg lh li lj]
+  "fixed arguments" (arg-3 la lb lc)
+  "variadic argument" (arg-var la lb lc)
+  "variadic in multi arity" (arity-var la lb lc)
+  "variadic argument without any argument processing" (arg-var-empty la lb lc)
+  "Variadics are slower.")
+
 ;;; arities
 
 (defn- arity-1
