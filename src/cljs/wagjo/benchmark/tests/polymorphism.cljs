@@ -39,7 +39,8 @@
             ttt (A. la)]
   "direct computation" [la lb c]
   "no polymorphism" (no-poly la lb)
-  "simple protocol function ↓" (simple ttt lb)
-  "directly calling protocol fn ↓" (-simple ttt lb)
+  "simple protocol function" (simple ttt lb)
+  "directly calling protocol fn" (-simple ttt lb)
   "abusing js/Object" (abuse ttt lb)
-  "directly abusing js/Object" (.abuse ttt lb))
+  "directly abusing js/Object" (.abuse ttt lb)
+  "Calling polymorphic function is slower. Abusing Object fixes this, but has other drawbacks.")

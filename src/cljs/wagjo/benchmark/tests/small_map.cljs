@@ -30,7 +30,8 @@
 (defbenchmark create
   50 10000 []
   "map" (create-map)
-  "custom type ↑" (create-type))
+  "custom type" (create-type)
+  "Creating type instance is faster.")
 
 ;;; access
 
@@ -73,7 +74,8 @@
   "(get m :a)" (access-map-get m)
   "(:a m)" (access-map-keyword m)
   "(m :a)" (access-map-map m)
-  "(.-a m) ↑" (access-type t))
+  "(.-a m)" (access-type t)
+  "Accessing type field is fastest. Accessing by keyword first is slowest.")
 
 ;;; assoc
 
@@ -92,4 +94,5 @@
   [m (create-map)
    t (create-type)]
   "map" (assoc-map m)
-  "type ↑" (assoc-type t))
+  "type" (assoc-type t)
+  "Assoc by creating new type instance is faster.")

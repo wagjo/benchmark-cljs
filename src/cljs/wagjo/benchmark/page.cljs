@@ -65,13 +65,15 @@
 
 (defn dom-print-benchmark
   "Prints benchmark to the web page."
-  [title & reports]
+  [title notes & reports]
   (let [content-elm (find-by-id dom-doc "content")]
     (dom-conj! content-elm
                (dom-element-w-class-html dom-doc "p" "bt" title))
     (doseq [r reports]
       (dom-conj! content-elm
-                 (dom-element-w-class-html dom-doc "p" "br" r)))))
+                 (dom-element-w-class-html dom-doc "p" "br" r)))
+    (dom-conj! content-elm
+               (dom-element-w-class-html dom-doc "p" "bn" (str "Expected outcomes: " notes)))))
 
 (defn wait-over!
   "Removes wait message."
@@ -94,7 +96,8 @@
      (if (nil? b)
        (wait-over!)
        (do
-         (apply dom-print-benchmark ((:fn b)))
+         (let [[t & r] ((:fn b))]
+           (apply dom-print-benchmark t (:notes b) r))
          (recur (<! c)))))))
 
 (defn run-group

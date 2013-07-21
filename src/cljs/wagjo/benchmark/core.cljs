@@ -23,27 +23,3 @@
   Is called after page loading is complete."
   []
   (wp/populate-menu @state/benchmarks-ref))
-
-(defn run-tests
-  [c]
-  (go
-   (wp/run-started!)
-   (<! (timeout 10)) ;; allow page to repaint
-   (loop [b (<! c)]
-     (if (nil? b)
-       (wp/wait-over!)
-       (do
-         (apply wp/dom-print-benchmark ((:fn b)))
-         (recur (<! c)))))))
-
-(defn ^{:export "benchmarkRun"} run!
-  "Runs all available benchmarks."
-  []
-  (let [c (chan)]
-    (go
-     (let [benchmarks @state/benchmarks-ref
-           sorted (sort-by :path benchmarks)]
-       (doseq [b sorted]
-         (>! c b))
-       (close! c)))
-    (run-tests c)))

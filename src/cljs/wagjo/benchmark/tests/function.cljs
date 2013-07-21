@@ -59,9 +59,13 @@
   "1 argument" (arg-1 la)
   "2 arguments" (arg-2 la lb)
   "9 arguments" (arg-9 la lb lc ld le lf lg lh li)
-  "10 arguments" (arg-10 la lb lc ld le lf lg lh li lj))
+  "10 arguments" (arg-10 la lb lc ld le lf lg lh li lj)
+  "Number of arguments makes no difference.")
 
 ;;; arities
+
+(defn- arity-1
+  ([la] [la b c d e f g h i j]))
 
 (defn- arity-2
   ([] [a b c d e f g h i j])
@@ -88,10 +92,12 @@
 
 (defbenchmark arities
   50 10000 [la 1]
-  "normal function ↑" (arg-1 la)
+  "normal function" (arg-1 la)
+  "normal function with multi arity syntax" (arity-1 la)
   "2 different arities" (arity-2 la)
   "5 different arities" (arity-5 la)
-  "10 different arities" (arity-10 la))
+  "10 different arities" (arity-10 la)
+  "Multi arity function are slower, with similar overhead no matter how many different arity types they have.")
 
 ;;; partials
 
@@ -112,6 +118,7 @@
 
 (defbenchmark partials
   50 10000 [lb 2]
-  "(partial f x) ↓↓↓" (partial-apply lb)
+  "(partial f x)" (partial-apply lb)
   "(fn [y] (f x y))" (fn-apply lb)
-  "#(f x %)" (reader-fn-apply lb))
+  "#(f x %)" (reader-fn-apply lb)
+  "Partial is freakingly slow.")

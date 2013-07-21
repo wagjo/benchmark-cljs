@@ -37,9 +37,10 @@
 (defbenchmark create
   300 10000
   []
-  "array ↑" (create-array)
+  "array" (create-array)
   "array vector" (create-array-vector)
-  "persistent vector" (create-persistent-vector))
+  "persistent vector" (create-persistent-vector)
+  "Creating persistent vector instance is slowest (freakingly slow in firefox).")
 
 ;;; vector access
 
@@ -87,12 +88,13 @@
   [arr (create-array)
    avec (create-array-vector)
    pvec (create-persistent-vector)]
-  "array ↑" (access-array arr)
+  "array" (access-array arr)
   "array vector" (access-array-vector avec)
-  "persistent vector ↓↓" (access-persistent-vector pvec)
-  "destructure array vector ↑" (destructure-array-vector avec)
-  "destructure persistent vector ↓↓"
-  (destructure-persistent-vector pvec))
+  "persistent vector" (access-persistent-vector pvec)
+  "destructure array vector" (destructure-array-vector avec)
+  "destructure persistent vector"
+  (destructure-persistent-vector pvec)
+  "Array vector shines when using destructuring and also slightly outperforms persistent vector in normal access too.")
 
 ;;; conjoining
 
@@ -119,6 +121,7 @@
   [arr (create-array)
    avec (create-array-vector)
    pvec (create-persistent-vector)]
-  "array ↑" (conj-array arr)
+  "array" (conj-array arr)
   "array vector" (conj-array-vector avec)
-  "persistent vector" (conj-persistent-vector pvec))
+  "persistent vector" (conj-persistent-vector pvec)
+  "Array is fastest, vectors performs the same.")

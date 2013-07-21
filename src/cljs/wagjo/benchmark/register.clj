@@ -16,14 +16,16 @@
                    "benchmark-cljs/blob/master/src/cljs/"
                    (cs/replace (cs/replace *ns* #"\." "/")
                                #"\-" "_") ".cljs\">"
-                   (subs name-str 22) "</a>")]
+                               (subs name-str 22) "</a>")
+        notes (last body)]
     `(do
        (defn ~fn-name []
-         (wagjo.tools.profile/benchmark ~label ~@body))
+         (wagjo.tools.profile/benchmark ~label ~@(butlast body)))
        (swap! wagjo.benchmark.state/benchmarks-ref
               conj
               {:path ~name-str :fn ~fn-name
-               :group ~group :name ~(str name)}))))
+               :group ~group :name ~(str name)
+               :notes ~notes}))))
 
 (comment
 
