@@ -20,21 +20,24 @@ h2 {
 .bt {
   font-weight: bold;
   margin-bottom:0em;
+  padding-bottom:3px;
 }
 
 .br {
-  font-size: small;
+  fdont-size: small;
   margin-top:0em;
   margin-bottom:0em;
-  padding-left:1em;
+  padding-left:0em;
+  padding-bottom:3px;
+  font-family: 'Ubuntu Mono', sans-serif;
 }
 
 .bn {
-  font-size: small;
+  fdont-size: small;
   margin-top:0em;
   margin-bottom:0em;
-  padding-left:1em;
-  font-style:italic;
+  padding-left:0em;
+  fodnt-style:italic;
 }
 
 .bg {
@@ -49,6 +52,10 @@ h2 {
   padding-left:0.5em;
   font-size:small;
   font-style:italic;
+}
+
+.sb {
+  color:green;
 }
 
 .bb:visited {
@@ -120,4 +127,9 @@ border-radius: 5px;
     margin-top:0em;
     padding-bottom:0.5em;
   font-family: 'Sofia', cursive;
+}
+
+ul {
+    margin-top:0px;
+    fdont-size:small;
 }
