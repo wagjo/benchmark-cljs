@@ -6,18 +6,26 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body id="bdy" style="margin:1em;">
-    <h2><a class="noshow" href="http://wagjo.github.io/benchmark-cljs/">Benchmarking ClojureScript</a></h2>
-    <p id="subtitle">design your code for performance</p>
-    <div id="container">
-      <div id="menu"></div>
-      <div id="content">
-        <p>Ready for testing. Please select group or individual benchmark.</p>
-        <!--<p>While your computer crunches code, consider <a href="https://www.gittip.com/wagjo/">supporting me in what I do</a>.-->
+    <div id="main">
+      <h2><a class="noshow"
+      href="#" onclick="location.reload();">Benchmarking ClojureScript</a></h2>
+      <p id="subtitle">design your code for performance</p>
+      <div id="container">
+        <div id="menu"></div>
+        <div id="content">
+          <p class="sb">Benchmark summaries are below. For actual
+          benchmarks, please select group or individual benchmark from
+          the left menu.</p>
+        </div>
       </div>
-    </div>
-    <div id="footer">Copyright © 2013, <a href="https://github.com/wagjo"> Jozef Wagner</a>. 
-    Licensed under EPL.<br/><a href="https://github.com/wagjo/benchmark-cljs">https://github.com/wagjo/benchmark-cljs</a></div>
-    <a href="https://github.com/wagjo/benchmark-cljs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
+      <div id="footer">Copyright © 2013, <a href="https://github.com/wagjo"> Jozef Wagner</a>. 
+        Licensed under EPL.<br/><a href="https://github.com/wagjo/benchmark-cljs">https://github.com/wagjo/benchmark-cljs</a></div>
+      <a href="https://github.com/wagjo/benchmark-cljs"><img style="position:
+                                                                    absolute; top: 0; right: 0; border: 0;"
+                                                             src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
+                                                             alt="Fork me on GitHub"></a>
+      </div>
+    <div id="blo"></div>
     <script src="benchmark.js"></script>
     <script>window.addEventListener("load", function()
     {benchmarkWrap();benchmarkInitPage();}, false);</script>
