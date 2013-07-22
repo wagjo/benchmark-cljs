@@ -28,13 +28,13 @@
   (.abuse t))
 
 (defbenchmark protocol
-  50 10000 [la 1
+  200 20000 [la 1
             lb 2
             ttt (A.)]
-  "baseline" (do (crunch nil) (crunch nil))
-  "no polymorphism" (no-poly)
-  "calling protocol fn" (-simple ttt)
-  "calling protocol fn with not-native hint"
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
+  "calling a function" (no-poly)
+  "calling a function extended on js/Object" (abuse-wrap ttt)
+  "calling a protocol function with not-native hint"
   (-simple ^not-native ttt)
-  "abusing js/Object" (abuse-wrap ttt)
+  "calling a protocol function" (-simple ttt)
   "Calling polymorphic function is slower. Abusing Object fixes this (only slightly in Chrome), but has other drawbacks. ^not-native is the best solution, if you can use it.")

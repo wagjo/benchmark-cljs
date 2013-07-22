@@ -72,8 +72,9 @@
     (doseq [r reports]
       (dom-conj! content-elm
                  (dom-element-w-class-html dom-doc "p" "br" r)))
-    (dom-conj! content-elm
-               (dom-element-w-class-html dom-doc "p" "bn" (str "Expected outcome: " notes)))))
+    (when-not (empty? notes)
+      (dom-conj! content-elm
+                 (dom-element-w-class-html dom-doc "p" "bn" (str "Summary: " notes))))))
 
 (defn wait-over!
   "Removes wait message."
@@ -155,3 +156,18 @@
       (set! (.-innerHTML new-line-elm)
             "Want more tests?<br/><a href=\"https://github.com/wagjo/benchmark-cljs/pulls\">pull requests</a> are welcome!")
       (dom-conj! menu-elm new-line-elm))))
+
+(defn print-summaries
+  "Print summaries."
+  [benchmarks]
+  (let [group-seq (map second
+                       (sort-by first (group-by :group benchmarks)))
+        content-elm (find-by-id dom-doc "content")]
+    (doseq [group group-seq]
+      (dom-conj! content-elm
+                 (dom-element-w-class-html dom-doc "p" "bt" (:group (first group))))
+      (let [new-line-elm (dom-element-w-class dom-doc "ul" "bul")]
+        (dom-conj! content-elm new-line-elm)
+        (doseq [b group]
+          (dom-conj! new-line-elm
+                     (dom-element-w-class-html dom-doc "li" "bs" (:notes b))))))))

@@ -35,11 +35,11 @@
 
 (defbenchmark create
   50 10000 []
-  "baseline" (do (crunch nil) (crunch (rand-int 10)))
-  "map" (do (crunch nil) (crunch (create-map)))
-  "custom type" (do (crunch nil) (crunch (create-type)))
-  "custom record" (do (crunch nil) (crunch (create-record)))
-  "Creating type/record instance is faster.")
+  "average overhead for this benchmark" (do (crunch nil) (crunch (rand-int 10)))
+  "(CustomType. x y z)" (do (crunch nil) (crunch (create-type)))
+  "{:x x :y y :z z}" (do (crunch nil) (crunch (create-map)))
+  "(CustomRecord. x y z)" (do (crunch nil) (crunch (create-record)))
+  "Creating type instance is moderately faster than creating ordinary map or record instance.")
 
 ;;; access
 
@@ -81,15 +81,15 @@
    t (create-type)
    r (create-record)
    a (rand-int 10)]
-  "baseline" (do (crunch nil) (crunch [a 2 3 4 5]))
-  "(get m :a)" (access-map-get m)
-  "(:a m)" (access-map-keyword m)
-  "(m :a)" (access-map-map m)
-  "(.-a m)" (access-type t)
-  "(get r :a)" (access-map-get r)
-  "(:a r)" (access-map-keyword r)
-  "(.-a r)" (access-type r)
-  "Accessing type/record field directly is fastest. Accessing by keyword first is slowest.")
+  "average overhead for this benchmark" (do (crunch nil) (crunch [a 2 3 4 5]))
+  "(.-a type)" (access-type t)
+  "(.-a record)" (access-type r)
+  "(get record :a)" (access-map-get r)
+  "(:a record)" (access-map-keyword r)
+  "(get map :a)" (access-map-get m)
+  "(map :a)" (access-map-map m)
+  "(:a map)" (access-map-keyword m)
+  "Accessing type/record field directly is fastest. Accessing record/map by keyword first is slowest.")
 
 ;;; assoc
 
@@ -117,9 +117,9 @@
   [m (create-map)
    t (create-type)
    r (create-record)]
-  "baseline" (do (crunch nil) (crunch nil))
-  "map assoc" (assoc-map m)
-  "type clone" (assoc-type t)
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
+  "type assoc by copy" (assoc-type t)
+  "record assoc by copy" (assoc-record r)
   "record assoc" (assoc-map r)
-  "record clone" (assoc-record r)
-  "Assoc by cloning is faster.")
+  "map assoc" (assoc-map m)
+  "Assoc in map or record is slow. Much faster is to have a custom type and copy it on every assoc.")

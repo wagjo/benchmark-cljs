@@ -10,12 +10,6 @@
 
 ;;;; Public API
 
-;; ArrayVector is useful for passing multiple values from/to
-;; functions. It is faster and has smaller footprint than
-;; PersistentVector for small vectors (< 32). Moreover,
-;; destructuring ArrayVectors is heavily optimized and much
-;; more faster than any other collection.
-
 ;;; vector creation
 
 (defn ^{:export "small_vectorCreateArray"} create-array
@@ -37,12 +31,12 @@
 (defbenchmark create
   300 10000
   []
-  "baseline" (do (crunch nil) (crunch nil))
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
   "array" (do (crunch nil) (crunch (create-array)))
   "array vector" (do (crunch nil) (crunch (create-array-vector)))
   "persistent vector" (do (crunch nil)
                           (crunch (create-persistent-vector)))
-  "Creating persistent vector instance is slowest.")
+  "Array vector is a custom addition to the ClojureScript and is included in some benchmarks.")
 
 ;;; vector access
 
@@ -90,14 +84,14 @@
   [arr (create-array)
    avec (create-array-vector)
    pvec (create-persistent-vector)]
-  "baseline" (do (crunch nil) (crunch nil) (crunch nil))
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil) (crunch nil))
   "array" (access-array arr)
+  "destructure array vector" (destructure-array-vector avec)
   "array vector" (access-array-vector avec)
   "persistent vector" (access-persistent-vector pvec)
-  "destructure array vector" (destructure-array-vector avec)
   "destructure persistent vector"
   (destructure-persistent-vector pvec)
-  "Array vector shines when using destructuring and also slightly outperforms persistent vector in normal access too.")
+  "Array vector's main advantage is fast destructuring with the help of ^ArrayVector hint.")
 
 ;;; conjoining
 
@@ -125,8 +119,8 @@
   [arr (create-array)
    avec (create-array-vector)
    pvec (create-persistent-vector)]
-  "baseline" (do (crunch nil) (crunch nil))
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
   "array" (conj-array arr)
   "array vector" (conj-array-vector avec)
   "persistent vector" (conj-persistent-vector pvec)
-  "Array is fastest, vectors performs the same.")
+  "Immutable conjoining to vector is comparable to the array in terms of performance (for small collection size).")

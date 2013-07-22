@@ -19,12 +19,12 @@
 
 (defbenchmark variadic
   50 10000 []
-  "baseline" (do (crunch nil) (crunch nil))
-  "fixed arguments" (arg-fixed nil nil nil)
-  "variadic argument" (arg-var nil nil nil)
-  "variadic argument other notation" (arg-var-other nil nil nil)
-  "variadic in multi arity" (arg-var-arity nil nil nil)
-  "Variadics are slower.")
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
+  "calling (defn f [x1 x2 x3] ...)" (arg-fixed nil nil nil)
+  "calling (defn f [& xs] ...)" (arg-var nil nil nil)
+  "calling (defn f ([& xs] ...))" (arg-var-other nil nil nil)
+  "calling (defn f ([] ...) ([& xs] ...))" (arg-var-arity nil nil nil)
+  "Calling variadic function is slower.")
 
 ;;; arities
 
@@ -49,12 +49,12 @@
      (crunch nil) (crunch nil)))
 
 (defbenchmark arities
-  50 10000 []
-  "baseline" (do (crunch nil) (crunch nil))
-  "no multiple arities" (arity-1 nil)
-  "2 different arities" (arity-2 nil)
-  "5 different arities" (arity-5 nil)
-  "Slight overhead in Chrome, no difference in Firefox.")
+  200 10000 []
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
+  "calling a function" (arity-1 nil)
+  "calling a function overloaded on arity (2 different arities)" (arity-2 nil)
+  "calling a function overloaded on arity (5 different arities)" (arity-5 nil)
+  "Calling a function which is overloaded on arity is slightly slower in Chrome, but makes no difference in Firefox.")
 
 ;;; partials
 
@@ -73,14 +73,14 @@
 
 (defbenchmark partials
   50 10000 []
-  "baseline" (do (crunch nil) (crunch nil))
-  "(partial f x) created outside the loop" (partial-apply nil)
-  "(partial f x) created inside the loop"
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
+  "calling (fn [y] (f x y)) created outside the loop" (fn-apply nil)
+  "calling #(f x %) created outside the loop" (f2-apply nil)
+  "calling #(f x %) created inside the loop" (let [f1 #(pfn nil %)] (f1 nil))
+  "calling (partial f x) created outside the loop" (partial-apply nil)
+  "calling (partial f x) created inside the loop"
   (let [pf (partial pfn nil)] (pf nil))
-  "#(f x %) created outside the loop" (f2-apply nil)
-  "#(f x %) created inside the loop" (let [f1 #(pfn nil %)] (f1 nil))
-  "(fn [y] (f x y)) created outside the loop" (fn-apply nil)
-  "Partial is very slow. Also do note that creating anonymous function costs something. This was not much an issue in the Clojure. Try not to create anonymous function inside performance sensitive loops, as it is created in each iteration.")
+  "Partial is very slow. Also do note that creating anonymous function costs something. Try not to create anonymous functions inside performance sensitive loops, as they are recreated in each iteration.")
 
 ;;; passing a value
 
@@ -150,18 +150,18 @@
    avec (ArrayVector. nil arr nil)
    map {:a a :b b :c c :d d :e e}
    ct (Passer. a b c d e)]
-  "baseline" (do (crunch nil) (crunch (+ a b c d e)))
-  "input in arguments" (passme-classic a b c d e)
-  "input in array" (passme-array arr)
-  "input in seq" (passme-pvec iseq)
-  "input in ordinary vector" (passme-pvec pvec)
-  "input in array vector" (passme-avec avec)
-  "input to variadic function" (passme-var a b c d e)
-  "input to variadic function through apply seq"
-  (apply passme-var iseq)
-  "input to variadic function through apply vec"
-  (apply passme-var pvec)
-  "input in ordinary map without destructuring" (passme-map-wod map)
-  "input in ordinary map" (passme-map map)
+  "average overhead for this benchmark" (do (crunch nil) (crunch (+ a b c d e)))
+  "input to arguments (N/A for returning multiple values)" (passme-classic a b c d e)
   "pass custom type" (passme-type ct)
-  "Ordinary collections performs badly. This adds up if you often pass multiple values to/from function in the loop.")
+  "pass array" (passme-array arr)
+  "pass array vector" (passme-avec avec)
+  "pass seq" (passme-pvec iseq)
+  "pass ordinary vector" (passme-pvec pvec)
+  "input to variadic function (N/A for returning multiple values)" (passme-var a b c d e)
+  "input to variadic function through apply seq (N/A for returning multiple values)"
+  (apply passme-var iseq)
+  "input to variadic function through apply vec (N/A for returning multiple values)"
+  (apply passme-var pvec)
+  "pass ordinary map" (passme-map map)
+  "pass ordinary map without destructuring" (passme-map-wod map)
+  "If you need to pass fixed number of multiple values, try to avoid maps, seqs and variadic functions. But most of time you don't really have a choice, because often the data is already in some kind of a collection and it would be inefficient to convert it to something else.")
