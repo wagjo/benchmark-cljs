@@ -79,15 +79,19 @@
 (defn wait-over!
   "Removes wait message."
   []
-  (let [wait-elm (find-by-id dom-doc "wait")]
+  (let [wait-elm (find-by-id dom-doc "wait")
+        elm (find-by-id dom-doc "menu")]
+    (gcs/remove elm "waiting")
     (.removeChild (.-parentNode wait-elm) wait-elm)))
 
 (defn run-started!
   "Removes wait message."
   []
-  (let [elm (find-by-id dom-doc "content")]
+  (let [elm (find-by-id dom-doc "content")
+        elmm (find-by-id dom-doc "menu")]
+    (gcs/add elmm "waiting")
     (set! (.-innerHTML elm)
-          "<p id=\"wait\">Computing...</p>")))
+          "<p id=\"wait\">Computing . . .</p>")))
 
 (defn run-tests
   [c]

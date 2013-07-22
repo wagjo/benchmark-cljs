@@ -8,7 +8,8 @@
             [wagjo.benchmark.tests.function]
             [wagjo.benchmark.tests.polymorphism]
             [wagjo.benchmark.tests.comparison]
-;;            [wagjo.benchmark.tests.collection]
+            [wagjo.benchmark.tests.mutation]
+            [wagjo.benchmark.tests.string]
             ))
 
 ;; Do not delete this file

@@ -102,14 +102,20 @@
    rb (nil? r)]
   "average overhead for this benchmark"
   (when rb (crunch nil))
-  "(or (identical? x val1) (identical? x val2) (identical? x val3))"
+  "ad-hoc (or (identical? x val1) (identical? x val2) (identical? x val3))"
   (when (or (identical? r :a) (identical? r :b) (identical? r :c)) (crunch nil))
+  "ad-hoc with many tests"
+  (when (or (identical? r :a) (identical? r :b) (identical? r :c)
+            (identical? r :a1) (identical? r :b1) (identical? r :c1)
+            (identical? r :a2) (identical? r :b2) (identical? r :c2)
+            (identical? r :a3) (identical? r :b3) (identical? r :c3)
+            (identical? r :a4) (identical? r :b4) (identical? r :c4)) (crunch nil))
   "(contains? set x)"
   (when (contains? s r) (crunch nil))
   "(some #(identical? x %) vector)"
   (when (some #(identical? r %) v) (crunch nil))
-  "(or (= x val1) (= x val2) (= x val3))"
+  "ad-hoc (or (= x val1) (= x val2) (= x val3))"
   (when (or (= r :a) (= r :b) (= r :c)) (crunch nil))
   "(some #(= x %) vector)"
   (when (some #(= r %) v) (crunch nil))
-  "Use ad-hoc testing for small set of values you know beforehand, use contains? for all other cases. Use identical? when you can (e.g. for strings, keywords, symbols).")
+  "Use ad-hoc testing for set of values you know beforehand, use contains? for all other cases. Use identical? when you can (e.g. for strings, keywords, symbols).")
