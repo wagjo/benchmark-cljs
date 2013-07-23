@@ -1,6 +1,6 @@
 ;; Copyright (C) 2013, Jozef Wagner. All rights reserved.
 
-(ns wagjo.benchmark.tests.small-map
+(ns wagjo.benchmark.tests.map-small
   "Small persistent maps vs custom types"
   (:require-macros [wagjo.tools.profile]
                    [wagjo.benchmark.register :refer [defbenchmark]])

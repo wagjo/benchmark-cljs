@@ -1,6 +1,6 @@
 ;; Copyright (C) 2013, Jozef Wagner. All rights reserved.
 
-(ns wagjo.benchmark.tests.small-vector
+(ns wagjo.benchmark.tests.vector-small
   "ArrayVector tests for small vectors."
   (:require-macros [wagjo.tools.profile]
                    [wagjo.benchmark.register :refer [defbenchmark]])

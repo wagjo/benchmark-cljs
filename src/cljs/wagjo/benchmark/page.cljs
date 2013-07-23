@@ -174,7 +174,7 @@
       (let [new-line-elm (dom-element-w-class dom-doc "ul" "bul")]
         (dom-conj! content-elm new-line-elm)
         (doseq [b group]
-          (when-not (contains? @scache (:notes b))
+          (when-not (or (empty? (:notes b)) (contains? @scache (:notes b)))
             (swap! scache conj (:notes b))
             (dom-conj! new-line-elm
                        (dom-element-w-class-html dom-doc "li" "bs" (:notes b)))))))))

@@ -3,14 +3,14 @@
 (ns wagjo.benchmark.list
   "List of all benchmarks.
   Put all namespaces from wagjo.benchmark.tests in following require."
-  (:require [wagjo.benchmark.tests.small-vector]
-            [wagjo.benchmark.tests.small-map]
+  (:require [wagjo.benchmark.tests.vector-small]
+            [wagjo.benchmark.tests.map-small]
             [wagjo.benchmark.tests.function]
             [wagjo.benchmark.tests.polymorphism]
             [wagjo.benchmark.tests.comparison]
             [wagjo.benchmark.tests.mutation]
             [wagjo.benchmark.tests.string]
-;;            [wagjo.benchmark.tests.host]
+            [wagjo.benchmark.tests.vector-large]
             ))
 
 ;; Do not delete this file
