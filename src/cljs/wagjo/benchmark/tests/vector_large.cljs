@@ -21,11 +21,11 @@
   []
   (to-array ls))
 
-(defn ^:export t2-create-vector
+(defn ^{:export "large_vectorCreateVector"} t2-create-vector
   []
   (vec ls))
 
-(defn ^:export t2-create-rrb-vector
+(defn ^{:export "lerge_vectorCreateRrb"} t2-create-rrb-vector
   []
   (rrb/vec ls))
 
@@ -45,6 +45,14 @@
 
 (def t4-rrb-vector (rrb/vec ls))
 
+(defn ^{:export "large_vectorConjVector"} conj-v
+  []
+  (conj t4-vector 5))
+
+(defn ^{:export "large_vectorConjRrb"} conj-r
+  []
+  (conj t4-rrb-vector 5))
+
 (defbenchmark conj
   50 1000 []
   "average overhead for this benchmark" (crunch nil)
@@ -60,6 +68,14 @@
 (def t3-vector (vec ls))
 
 (def t3-rrb-vector (rrb/vec ls))
+
+(defn ^{:export "large_vectorRandomVector"} rand-v
+  []
+  (nth t3-vector (rand-int large-size)))
+
+(defn ^{:export "large_vectorRandomRrb"} rand-r
+  []
+  (nth t3-rrb-vector (rand-int large-size)))
 
 (defbenchmark random-access
   50 10000 []
@@ -77,11 +93,20 @@
 
 (def t5-rrb-vector (rrb/vec ls))
 
+(defn ^{:export "large_vectorReduceVector"} red-v
+  []
+  (reduce-kv #(+ % %3) 0 t5-vector))
+
+(defn ^{:export "large_vectorReduceRrb"} red-r
+  []
+  (reduce-kv #(+ % %3) 0 t5-rrb-vector))
+
 (defbenchmark reduce
   30 200 []
   "average overhead for this benchmark" (crunch nil)
   "array" (crunch (ua/reduce + 0 t5-array))
   "vector" (crunch (reduce + 0 t5-vector))
+  "vector reduce-kv" (crunch (reduce-kv #(+ % %3) 0 t5-vector))
   "rrb vector" (crunch (reduce + 0 t5-rrb-vector))
   "rrb vector reduce-kv" (crunch (reduce-kv #(+ % %3) 0 t5-rrb-vector))
   "")
@@ -93,6 +118,14 @@
 (def t6-vector (vec ls))
 
 (def t6-rrb-vector (rrb/vec ls))
+
+(defn ^{:export "large_vectorAssocVector"} ass-c
+  []
+  (assoc t6-vector (rand-int large-size) 5))
+
+(defn ^{:export "large_vectorAssocRrb"} ass-r
+  []
+  (assoc t6-rrb-vector (rand-int large-size) 5))
 
 (defbenchmark assoc
   50 10000 []
@@ -109,6 +142,20 @@
 (def t7-vector (vec ls))
 
 (def t7-rrb-vector (rrb/vec ls))
+
+(defn ^{:export "large_vectorInsertVector"} ins-v
+  []
+  (let [r (rand-int large-size)
+        b (subvec t7-vector 0 r)
+        a (subvec t7-vector r)]
+    (into (conj b 5) a)))
+
+(defn ^{:export "large_vectorInsertRrb"} ins-r
+  []
+  (let [r (rand-int large-size)
+        b (rrb/subvec t7-rrb-vector 0 r)
+        a (rrb/subvec t7-rrb-vector r)]
+    (rrb/catvec (conj b 5) a)))
 
 (defbenchmark insert
   50 100 []
