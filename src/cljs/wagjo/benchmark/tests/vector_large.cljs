@@ -25,7 +25,7 @@
   []
   (vec ls))
 
-(defn ^{:export "lerge_vectorCreateRrb"} t2-create-rrb-vector
+(defn ^{:export "large_vectorCreateRrb"} t2-create-rrb-vector
   []
   (rrb/vec ls))
 
