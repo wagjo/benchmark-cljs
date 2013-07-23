@@ -25,6 +25,7 @@ h3 {
 
 .bt {
   font-weight: bold;
+  margin-top:1.2em;
   margin-bottom:0em;
   padding-bottom:3px;
   padding-left:0em;
@@ -191,4 +192,12 @@ ul {
     right:0px;
     opacity:0.1;
     z-index:-1;
+}
+
+.bs {
+    margin-bottom:2px;
+}
+
+p, li {
+    text-align:justify;
 }
