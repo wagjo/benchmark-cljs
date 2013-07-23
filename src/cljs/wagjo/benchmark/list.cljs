@@ -10,6 +10,7 @@
             [wagjo.benchmark.tests.comparison]
             [wagjo.benchmark.tests.mutation]
             [wagjo.benchmark.tests.string]
+;;            [wagjo.benchmark.tests.host]
             ))
 
 ;; Do not delete this file

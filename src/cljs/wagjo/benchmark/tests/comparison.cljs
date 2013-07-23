@@ -53,28 +53,30 @@
 (defn- create-seq []
   (doall (map identity (create-array-vector))))
 
+(def xm (create-map))
+(def xr (create-record))
+(def xav (create-array-vector))
+(def xpv (create-persistent-vector))
+(def xs (create-set))
+(def xls (create-seq))
+(def xkvv (vec (seq xm)))
+(def xm2 (create-map))
+(def xr2 (create-record))
+(def xav2 (create-array-vector))
+(def xpv2 (create-persistent-vector))
+(def xs2 (create-set))
+(def xls2 (create-seq))
+(def xkvv2 (vec (seq xm2)))
+
 (defbenchmark small-collection
-  20 1000 [m (create-map)
-           r (create-record)
-           av (create-array-vector)
-           pv (create-persistent-vector)
-           s (create-set)
-           ls (create-seq)
-           kvv (vec (seq m))
-           m2 (create-map)
-           r2 (create-record)
-           av2 (create-array-vector)
-           pv2 (create-persistent-vector)
-           s2 (create-set)
-           ls2 (create-seq)
-           kvv2 (vec (seq m2))]
-  "(= array-vector array-vector)" (= av av2)
-  "(= persistent-vector persistent-vector)" (= pv pv2)
-  "(= seq seq)" (= ls ls2)
-  "(= set set)" (= s s2)
-  "(= vector-of-keyvals vector-of-keyvals)" (= kvv kvv2)
-  "(= map map)" (= m m2)
-  "(= record record)" (= r r2)
+  20 1000 []
+  "(= array-vector array-vector)" (= xav xav2)
+  "(= persistent-vector persistent-vector)" (= xpv xpv2)
+  "(= seq seq)" (= xls xls2)
+  "(= set set)" (= xs xs2)
+  "(= vector-of-keyvals vector-of-keyvals)" (= xkvv xkvv2)
+  "(= map map)" (= xm xm2)
+  "(= record record)" (= xr xr2)
   "When comparing small collections for equivalence, vectors are fastest to compare.")
 
 ;;; contains?
@@ -94,12 +96,14 @@
   []
   (cljs.core.PersistentVector/fromArray (array 1 2.0 "b") true))
 
+(def v [:a :b :c])
+(def s (set v))
+(def r (rand-nth [:d :e]))
+(def rb (nil? r))
+
 (defbenchmark contains?
   100 1000
-  [v [:a :b :c]
-   s (set v)
-   r (rand-nth [:d :e])
-   rb (nil? r)]
+  []
   "average overhead for this benchmark"
   (when rb (crunch nil))
   "ad-hoc (or (identical? x val1) (identical? x val2) (identical? x val3))"

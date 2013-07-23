@@ -10,6 +10,7 @@
             [wagjo.tools.profile]
             [wagjo.benchmark.state]
             [wagjo.data.string :as us]
+            [wagjo.data.array :as ua]
             [wagjo.benchmark.preventer :refer [crunch]]))
 
 ;;; concat three strings
@@ -56,20 +57,33 @@
     (.append gsb s))
   (.toString gsb))
 
+(def ss (doall (take 3 (map #(str "aaa " %) (repeatedly #(rand-int 10))))))
+(def ls (doall (take 1000 (map #(str "aaa " %) (repeatedly #(rand-int 10))))))
+(def as (to-array ls))
+(def vs (vec ls))
+
 (defbenchmark small-seq-concat
-  50 10000 [str-seq (doall (take 3 (map #(str "aaa " %) (repeatedly #(rand-int 10)))))]
+  50 10000 []
   "average overhead for this benchmark" (crunch nil)
-  "custom concat with reduce and js/+" (crunch (us/cat-seq str-seq))
-  "using static google.string.StringBuffer with apply" (crunch (goog-static-concat-seq str-seq))
-  "using static google.string.StringBuffer with doseq" (crunch (goog-static-concat-seq* str-seq))
-  "(apply str seq)" (crunch (apply str str-seq))
-  "str function is also slow for concatenating seq of strings.")
+  "custom concat with reduce and js/+" (crunch (us/cat-seq ss))
+  "using static google.string.StringBuffer with apply" (crunch (goog-static-concat-seq ss))
+  "using static google.string.StringBuffer with doseq" (crunch (goog-static-concat-seq* ss))
+  "(apply str seq)" (crunch (apply str ss))
+  "str function is also slow for concatenation of string seqs.")
 
 (defbenchmark large-seq-concat
-  30 100 [str-seq (doall (take 1000 (map #(str "aaa " %) (repeatedly #(rand-int 10)))))]
+  30 100 []
   "average overhead for this benchmark" (crunch nil)
-  "custom concat with reduce and js/+" (crunch (us/cat-seq str-seq))
-  "using static google.string.StringBuffer with apply" (crunch (goog-static-concat-seq str-seq))
-  "using static google.string.StringBuffer with doseq" (crunch (goog-static-concat-seq* str-seq))
-  "(apply str seq)" (crunch (apply str str-seq))
-  "str function is also slow for concatenating seq of strings.")
+  "custom concat with reduce and js/+" (crunch (us/cat-seq ls))
+  "using static google.string.StringBuffer with apply" (crunch (goog-static-concat-seq ls))
+  "using static google.string.StringBuffer with doseq" (crunch (goog-static-concat-seq* ls))
+  "(apply str seq)" (crunch (apply str ls))
+  "str function is also slow for concatenation of string seqs.")
+
+(defbenchmark large-coll-concat
+  30 100 []
+  "average overhead for this benchmark" (crunch nil)
+  "custom array concat" (crunch (us/cat-arr as))
+  "array reduce" (crunch (reduce us/cat2 "" as))
+  "vector reduce" (crunch (reduce us/cat2 "" vs))
+  "Fastest way to concat many strings is to have them in array and concat them in the loop.")

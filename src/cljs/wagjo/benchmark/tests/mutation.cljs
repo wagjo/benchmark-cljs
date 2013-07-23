@@ -23,10 +23,12 @@
   (crunch nil)
   (-set-x ^not-native type val))
 
+(def mutable-atom (atom nil))
+(def mutable-type (MutableType. nil))
+(def r (rand-int 10))
+
 (defbenchmark atom
-  200 20000 [mutable-atom (atom nil)
-             mutable-type (MutableType. nil)
-             r (rand-int 10)]
+  200 20000 []
   "average overhead for this benchmark" (crunch nil)
   "mutating type" (reset!* mutable-type r)
   "mutating atom" (do (crunch nil) (reset! mutable-atom r))

@@ -137,19 +137,21 @@
 
 (deftype Passer [a b c d e])
 
+(def a (rand-int 10))
+(def b (rand-int 10))
+(def c (rand-int 10))
+(def d (rand-int 10))
+(def e (rand-int 10))
+(def arr (array a b c d e))
+(def pvec (cljs.core.PersistentVector/fromArray arr true))
+(def iseq (doall (seq pvec)))
+(def avec (ArrayVector. nil arr nil))
+(def mapx {:a a :b b :c c :d d :e e})
+(def ct (Passer. a b c d e))
+
 (defbenchmark passing-values
   50 10000
-  [a (rand-int 10)
-   b (rand-int 10)
-   c (rand-int 10)
-   d (rand-int 10)
-   e (rand-int 10)
-   arr (array a b c d e)
-   pvec (cljs.core.PersistentVector/fromArray arr true)
-   iseq (doall (seq pvec))
-   avec (ArrayVector. nil arr nil)
-   map {:a a :b b :c c :d d :e e}
-   ct (Passer. a b c d e)]
+  []
   "average overhead for this benchmark" (do (crunch nil) (crunch (+ a b c d e)))
   "input to arguments (N/A for returning multiple values)" (passme-classic a b c d e)
   "pass custom type" (passme-type ct)
@@ -162,6 +164,6 @@
   (apply passme-var iseq)
   "input to variadic function through apply vec (N/A for returning multiple values)"
   (apply passme-var pvec)
-  "pass ordinary map" (passme-map map)
-  "pass ordinary map without destructuring" (passme-map-wod map)
+  "pass ordinary map" (passme-map mapx)
+  "pass ordinary map without destructuring" (passme-map-wod mapx)
   "If you need to pass fixed number of multiple values, try to avoid maps, seqs and variadic functions. But most of time you don't really have a choice, because often the data is already in some kind of a collection and it would be inefficient to convert it to something else.")

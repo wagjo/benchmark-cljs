@@ -128,7 +128,7 @@
   [group]
   (let [elm (dom-element-w-class-text dom-doc "a" "bg"
                                       (:group (first group)))
-        handler (fn [evt] (run-group group))]
+        handler (fn [evt] (run-group group) (.preventDefault evt))]
     (.setAttribute elm "href" "#")
     (.addEventListener elm "click" handler)
     elm))
@@ -137,7 +137,7 @@
   [b]
   (let [elm (dom-element-w-class-text dom-doc "a" "bb"
                                       (:name b))
-        handler (fn [evt] (run-bench b))]
+        handler (fn [evt] (run-bench b) (.preventDefault evt))]
     (.setAttribute elm "href" "#")
     (.addEventListener elm "click" handler)
     elm))
@@ -166,12 +166,15 @@
   [benchmarks]
   (let [group-seq (map second
                        (sort-by first (group-by :group benchmarks)))
-        content-elm (find-by-id dom-doc "content")]
+        content-elm (find-by-id dom-doc "content")
+        scache (atom #{})]
     (doseq [group group-seq]
       (dom-conj! content-elm
                  (dom-element-w-class-html dom-doc "p" "bt" (:group (first group))))
       (let [new-line-elm (dom-element-w-class dom-doc "ul" "bul")]
         (dom-conj! content-elm new-line-elm)
         (doseq [b group]
-          (dom-conj! new-line-elm
-                     (dom-element-w-class-html dom-doc "li" "bs" (:notes b))))))))
+          (when-not (contains? @scache (:notes b))
+            (swap! scache conj (:notes b))
+            (dom-conj! new-line-elm
+                       (dom-element-w-class-html dom-doc "li" "bs" (:notes b)))))))))

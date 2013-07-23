@@ -41,6 +41,31 @@
   "(CustomRecord. x y z)" (do (crunch nil) (crunch (create-record)))
   "Creating type instance is moderately faster than creating ordinary map or record instance.")
 
+(def kvv [[:a (rand-int 10)] [:b (rand-int 10)]
+          [:c (rand-int 10)] [:d (rand-int 10)]
+          [:e (rand-int 10)] [:f (rand-int 10)]
+          [:g (rand-int 10)] [:h (rand-int 10)]])
+
+(defn create-conj
+  [kvv]
+  (apply conj {} kvv))
+
+(defn create-into
+  [kvv]
+  (into {} kvv))
+
+(defn create-reduce
+  [kvv]
+  (reduce conj {} kvv))
+
+(defbenchmark create-dynamic
+  50 1000 []
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
+  "(into {} ...)" (do (crunch nil) (crunch (create-into kvv)))
+  "(reduce conj {} ...)" (do (crunch nil) (crunch (create-reduce kvv)))
+  "(apply conj {} ...)" (do (crunch nil) (crunch (create-conj kvv)))
+  "Creating map with into is both fast and idiomatic.")
+
 ;;; access
 
 (defn- ^:export access-map-get [m]
@@ -75,12 +100,14 @@
         e (get-e o)]
     (crunch nil) (crunch [a b c d e])))
 
+(def m (create-map))
+(def t (create-type))
+(def r (create-record))
+(def a (rand-int 10))
+
 (defbenchmark access
   50 10000
-  [m (create-map)
-   t (create-type)
-   r (create-record)
-   a (rand-int 10)]
+  []
   "average overhead for this benchmark" (do (crunch nil) (crunch [a 2 3 4 5]))
   "(.-a type)" (access-type t)
   "(.-a record)" (access-type r)
@@ -96,6 +123,9 @@
 (defn- ^:export assoc-map [m]
   (crunch nil) (crunch (assoc m :c 8)))
 
+(defn- ^:export update-map [m]
+  (crunch nil) (crunch (update-in m [:d] inc)))
+
 (defn- ^:export assoc-type [o]
   (let [a (get-a o)
         b (get-b o)
@@ -103,6 +133,15 @@
         e (get-e o)]
     (crunch nil)
     (crunch (create-my-type a b 8 d e))))
+
+(defn- ^:export update-type [o]
+  (let [a (get-a o)
+        b (get-b o)
+        c (get-c o)
+        d (get-d o)
+        e (get-e o)]
+    (crunch nil)
+    (crunch (create-my-type a b c (inc d) e))))
 
 (defn- ^:export assoc-record [o]
   (let [a (get-a o)
@@ -112,14 +151,39 @@
     (crunch nil)
     (crunch (create-my-record a b 8 d e))))
 
+(defn- ^:export update-record [o]
+  (let [a (get-a o)
+        b (get-b o)
+        c (get-c o)
+        d (get-d o)
+        e (get-e o)]
+    (crunch nil)
+    (crunch (create-my-record a b c (inc d) e))))
+
+(def m2 (create-map))
+(def t2 (create-type))
+(def r2 (create-record))
+
 (defbenchmark assoc
   50 10000
-  [m (create-map)
-   t (create-type)
-   r (create-record)]
+  []
   "average overhead for this benchmark" (do (crunch nil) (crunch nil))
-  "type assoc by copy" (assoc-type t)
-  "record assoc by copy" (assoc-record r)
-  "record assoc" (assoc-map r)
-  "map assoc" (assoc-map m)
+  "type assoc by copy" (assoc-type t2)
+  "record assoc by copy" (assoc-record r2)
+  "record assoc" (assoc-map r2)
+  "map assoc" (assoc-map m2)
   "Assoc in map or record is slow. Much faster is to have a custom type and copy it on every assoc.")
+
+(def m3 (create-map))
+(def t3 (create-type))
+(def r3 (create-record))
+
+(defbenchmark update
+  50 10000
+  []
+  "average overhead for this benchmark" (do (crunch nil) (crunch nil))
+  "type update by copy" (update-type t3)
+  "record update by copy" (update-record r3)
+  "record update" (update-map r3)
+  "map update" (update-map m3)
+  "Update in map or record is slow. Much faster is to have a custom type and copy it on every update.")

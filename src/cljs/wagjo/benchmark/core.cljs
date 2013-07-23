@@ -23,5 +23,4 @@
   Is called after page loading is complete."
   []
   (wp/populate-menu @state/benchmarks-ref)
-  (wp/print-summaries @state/benchmarks-ref)
-  )
+  (wp/print-summaries @state/benchmarks-ref))

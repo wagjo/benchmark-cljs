@@ -79,11 +79,13 @@
   (let [[x y z] vec]
     (crunch x) (crunch y) (crunch z)))
 
+(def arr (create-array))
+(def avec (create-array-vector))
+(def pvec (create-persistent-vector))
+
 (defbenchmark access
   50 10000
-  [arr (create-array)
-   avec (create-array-vector)
-   pvec (create-persistent-vector)]
+  []
   "average overhead for this benchmark" (do (crunch nil) (crunch nil) (crunch nil))
   "array" (access-array arr)
   "destructure array vector" (destructure-array-vector avec)
@@ -114,13 +116,15 @@
   [vec]
   (crunch nil) (crunch (conj vec -3)))
 
+(def arr2 (create-array))
+(def avec2 (create-array-vector))
+(def pvec2 (create-persistent-vector))
+
 (defbenchmark conj
   100 10000
-  [arr (create-array)
-   avec (create-array-vector)
-   pvec (create-persistent-vector)]
+  []
   "average overhead for this benchmark" (do (crunch nil) (crunch nil))
-  "array" (conj-array arr)
-  "array vector" (conj-array-vector avec)
-  "persistent vector" (conj-persistent-vector pvec)
+  "array" (conj-array arr2)
+  "array vector" (conj-array-vector avec2)
+  "persistent vector" (conj-persistent-vector pvec2)
   "Immutable conjoining to vector is comparable to the array in terms of performance (for small collection size).")
