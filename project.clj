@@ -6,7 +6,7 @@
                  [core.async "0.1.0-SNAPSHOT"]
                  [com.wagjo/clojurescript "0.1.0-SNAPSHOT"]
                  [com.wagjo/data-cljs "0.1.0-SNAPSHOT"]
-                 [com.wagjo/core.rrb-vector "0.1.0-SNAPSHOT"]
+                 [org.clojure/core.rrb-vector "0.0.10-SNAPSHOT"]
                  [com.wagjo/tools-cljs "0.1.0-SNAPSHOT"]
                  [com.cemerick/piggieback "0.0.5"
                    :exclusions [org.clojure/clojurescript

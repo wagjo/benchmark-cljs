@@ -10,12 +10,19 @@
 
 ;;;; Public API
 
+(deftype Tuple [x y z])
+
 ;;; vector creation
 
 (defn ^{:export "small_vectorCreateArray"} create-array
   "Returns new array."
   []
   (array 1 2.0 "b"))
+
+(defn ^{:export "small_vectorCreateTuple"} create-tuple
+  "Returns new tuple."
+  []
+  (Tuple. 1 2.0 "b"))
 
 (defn ^{:export "small_vectorCreateArrayVector"} create-array-vector
   "Returns new array vector."
@@ -34,6 +41,7 @@
   "average overhead for this benchmark" (do (crunch nil) (crunch nil))
   "array" (do (crunch nil) (crunch (create-array)))
   "array vector" (do (crunch nil) (crunch (create-array-vector)))
+  "tuple" (do (crunch nil) (crunch (create-tuple)))
   "persistent vector" (do (crunch nil)
                           (crunch (create-persistent-vector)))
   "Array vector is a custom addition to the ClojureScript and is included in some benchmarks.")
@@ -54,6 +62,14 @@
   (let [x (nth avec 0)
         y (nth avec 1)
         z (nth avec 2)]
+    (crunch x) (crunch y) (crunch z)))
+
+(defn ^{:export "small_vectorAccessTuple"} access-tuple
+  "Accesses first three elements."
+  [t]
+  (let [x (.-x t)
+        y (.-y t)
+        z (.-z t)]
     (crunch x) (crunch y) (crunch z)))
 
 (defn ^{:export "small_vectorAccessPersistentVector"}
@@ -82,6 +98,7 @@
 (def arr (create-array))
 (def avec (create-array-vector))
 (def pvec (create-persistent-vector))
+(def t (create-tuple))
 
 (defbenchmark access
   50 10000
@@ -89,6 +106,7 @@
   "average overhead for this benchmark" (do (crunch nil) (crunch nil) (crunch nil))
   "array" (access-array arr)
   "destructure array vector" (destructure-array-vector avec)
+  "tuple" (access-tuple t)
   "array vector" (access-array-vector avec)
   "persistent vector" (access-persistent-vector pvec)
   "destructure persistent vector"

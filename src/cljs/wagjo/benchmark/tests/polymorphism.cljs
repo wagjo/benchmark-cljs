@@ -57,5 +57,5 @@
   "custom typecheck" (do (crunch nil) (crunch (== t (.typecheck ttt2))))
   "(identical? T (type o))" (do (crunch nil) (crunch (== B (type ttt2))))
   "(satisfies? P o)" (do (crunch nil) (crunch (satisfies? P2 ttt2)))
-  "(satisfies? P o false)" (do (crunch nil) (crunch (satisfies? P2 ttt2 false)))
+;;  "(satisfies? P o false)" (do (crunch nil) (crunch (satisfies? P2 ttt2 false)))
   "instance? is slower than custom type check in FF. No hacks needed for Chrome.")
