@@ -29,11 +29,17 @@
   []
   (ArrayVector. nil (array 1 2.0 "b") nil))
 
+(defn ^{:export "small_vectorCreatePersistentVectorOld"}
+  create-persistent-vector-old
+  "Returns new persistent vector the old way."
+  []
+  (cljs.core.PersistentVector/fromArray (array 1 2.0 "b") true))
+
 (defn ^{:export "small_vectorCreatePersistentVector"}
   create-persistent-vector
   "Returns new persistent vector."
   []
-  (cljs.core.PersistentVector/fromArray (array 1 2.0 "b") true))
+  (PersistentVector. nil 3 5 cljs.core.PersistentVector.EMPTY_NODE (array 1 2.0 "b") nil))
 
 (defbenchmark create
   300 10000
@@ -44,6 +50,8 @@
   "tuple" (do (crunch nil) (crunch (create-tuple)))
   "persistent vector" (do (crunch nil)
                           (crunch (create-persistent-vector)))
+  "persistent vector the old way" (do (crunch nil)
+                          (crunch (create-persistent-vector-old)))
   "Array vector is a custom addition to the ClojureScript and is included in some benchmarks.")
 
 ;;; vector access
@@ -116,11 +124,22 @@
 ;;; conjoining
 
 (defn ^{:export "small_vectorConjArray"} conj-array
-  "Conjoins to array."
+  "Conjoins to array with the help of Array.slice()."
   [arr]
   (crunch nil)
   (let [new-arr (.slice arr)]
     (.push new-arr -3)
+    (crunch new-arr)))
+
+(defn ^{:export "small_vectorConjArrayManual"} conj-array-manual
+  "Conjoins to array manually."
+  [arr]
+  (crunch nil)
+  (let [len (alength arr)
+        new-arr (make-array (inc len))]
+    (dotimes [i len]
+      (aset new-arr i (aget arr i)))
+    (aset new-arr len -3)
     (crunch new-arr)))
 
 (defn ^{:export "small_vectorConjArrayVector"} conj-array-vector
@@ -135,6 +154,7 @@
   (crunch nil) (crunch (conj vec -3)))
 
 (def arr2 (create-array))
+(def arr3 (create-array))
 (def avec2 (create-array-vector))
 (def pvec2 (create-persistent-vector))
 
@@ -142,7 +162,8 @@
   100 10000
   []
   "average overhead for this benchmark" (do (crunch nil) (crunch nil))
-  "array" (conj-array arr2)
+  "array" (conj-array-manual arr3)
   "array vector" (conj-array-vector avec2)
   "persistent vector" (conj-persistent-vector pvec2)
+  "array with .slice" (conj-array arr2)
   "Immutable conjoining to vector is comparable to the array in terms of performance (for small collection size).")
