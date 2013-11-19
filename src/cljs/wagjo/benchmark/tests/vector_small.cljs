@@ -46,8 +46,8 @@
   []
   "average overhead for this benchmark" (do (crunch nil) (crunch nil))
   "array" (do (crunch nil) (crunch (create-array)))
-  "array vector" (do (crunch nil) (crunch (create-array-vector)))
   "tuple" (do (crunch nil) (crunch (create-tuple)))
+  "array vector" (do (crunch nil) (crunch (create-array-vector)))
   "persistent vector" (do (crunch nil)
                           (crunch (create-persistent-vector)))
   "persistent vector the old way" (do (crunch nil)
